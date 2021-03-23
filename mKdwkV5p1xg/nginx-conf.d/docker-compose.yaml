@@ -1,0 +1,52 @@
+version: '3.9'
+
+services:
+  mysql:
+    image: mysql:8.0
+    container_name: mysql8
+    restart: unless-stopped
+    env_file: .env
+    volumes:
+      - dbfile:/var/lib/mysql
+    command: '--default-authentication-plugin=mysql_native_password'
+    networks:
+      - app
+
+  wp:
+    image: wordpress:5.7.0-php8.0-fpm
+    container_name: wordpress-5.7.0-php8.0-fpm
+    depends_on:
+      - mysql
+    restart: unless-stopped
+    env_file: .env
+    environment:
+      - WORDPRESS_DB_HOST=mysql:3306
+      - WORDPRESS_DB_USER=$MYSQL_USER
+      - WORDPRESS_DB_PASSWORD=$MYSQL_PASSWORD
+      - WORDPRESS_DB_NAME=$MYSQL_DATABASE
+    volumes:
+      - www-html:/var/www/html
+    networks:
+      - app
+
+  nginx:
+    image: nginx:1.19.8-alpine
+    depends_on:
+      - wp
+    container_name: nginx-1.19.8-alpine
+    restart: unless-stopped
+    ports:
+      - "80:80"
+    volumes:
+      - www-html:/var/www/html
+      - ./nginx-conf.d:/etc/nginx/conf.d
+    networks:
+      - app
+
+volumes:
+  www-html:
+  dbfile:
+
+networks:
+  app:
+    driver: bridge
