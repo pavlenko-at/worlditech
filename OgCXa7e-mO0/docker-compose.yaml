@@ -33,7 +33,7 @@ services:
     image: nginx:1.19.8-alpine
     depends_on:
       - wp
-    container_name: nginx-1.19.8-alpine
+    container_name: nginx
     restart: unless-stopped
     ports:
       - "80:80"
@@ -43,7 +43,7 @@ services:
       - etc-letsencrypt:/etc/letsencrypt
     networks:
       - app
-  
+
   certbot:
     image: certbot/certbot
     depends_on:
@@ -52,16 +52,8 @@ services:
     volumes:
       - etc-letsencrypt:/etc/letsencrypt
       - www-html:/var/www/html
-    command: | 
-      certonly --webroot \
-               --webroot-path=/var/www/html \
-               --email pavlenko.at@mail.ru \
-               --agree-tos \
-               --no-eff-email \
-               --staging \
-               -d north.world-ithech.ru \
-               -d www.north.world-ithech.ru
-
+    command: certonly --webroot --webroot-path=/var/www/html --email pavlenko.at@mail.ru --agree-tos --no-eff-email -d test.world-itech.ru
+ 
 volumes:
   www-html:
   dbfile:
@@ -70,3 +62,4 @@ volumes:
 networks:
   app:
     driver: bridge
+
