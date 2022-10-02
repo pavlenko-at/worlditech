@@ -1,0 +1,10 @@
+[Unit]
+Description=Sword of the Inquisition.
+Requires=SwordInquisition.service
+
+[Timer]
+Unit=SwordInquisition.service
+OnCalendar=*-*-* 09:50:00
+
+[Install]
+WantedBy=timers.target
