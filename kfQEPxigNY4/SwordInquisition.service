@@ -1,0 +1,10 @@
+[Unit]
+Description=Sword of the Inquisition.
+Wants=SwordInquisition.timer
+
+[Service]
+Type=oneshot
+ExecStart=/usr/bin/df
+
+[Install]
+WantedBy=multi-user.target
